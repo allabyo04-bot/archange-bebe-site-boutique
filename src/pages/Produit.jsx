@@ -117,6 +117,13 @@ export default function Produit() {
             </div>
 
             <p style={{ color: 'var(--brown-soft)', fontSize: 13, marginTop: 20 }}>Référence : {produit.reference}</p>
+
+            {produit.description && (
+              <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--cream-deep)' }}>
+                <h2 style={{ fontSize: 15, marginBottom: 8 }}>Description</h2>
+                <p style={{ color: 'var(--brown-soft)', fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-line' }}>{produit.description}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
