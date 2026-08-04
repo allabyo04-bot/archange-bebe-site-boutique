@@ -11,10 +11,16 @@ export default function Produit() {
   const [erreur, setErreur] = useState('');
   const [quantite, setQuantite] = useState(1);
   const [ajoute, setAjoute] = useState(false);
+  const [photoActive, setPhotoActive] = useState(null);
 
   useEffect(() => {
     setProduit(null);
-    appelApi('GET', `/produits/${id}`).then(setProduit).catch((err) => setErreur(err.message));
+    appelApi('GET', `/produits/${id}`).then((data) => {
+      setProduit(data);
+      const photos = data.photos || [];
+      const principale = photos.find((p) => p.estPrincipale) || photos[0];
+      setPhotoActive(principale ? principale.url : data.photoUrl || null);
+    }).catch((err) => setErreur(err.message));
   }, [id]);
 
   function gererAjout() {
@@ -52,13 +58,31 @@ export default function Produit() {
         <button onClick={() => navigate(-1)} className="bouton-secondaire" style={{ marginBottom: 24 }}>← Retour</button>
 
         <div style={styles.grille} className="grille-produit">
-          <div style={styles.imageZone}>
-            {produit.photoUrl ? (
-              <img src={produit.photoUrl} alt={produit.designation} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              <span style={{ fontSize: 60, opacity: 0.3 }}>📦</span>
+          <div>
+            <div style={styles.imageZone}>
+              {photoActive ? (
+                <img src={photoActive} alt={produit.designation} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <span style={{ fontSize: 60, opacity: 0.3 }}>📦</span>
+              )}
+              {enPromo && <span style={styles.badgePromo}>-{pourcentageRemise}%</span>}
+            </div>
+            {produit.photos && produit.photos.length > 1 && (
+              <div style={styles.miniatures}>
+                {produit.photos.map((photo) => (
+                  <button
+                    key={photo.id}
+                    onClick={() => setPhotoActive(photo.url)}
+                    style={{
+                      ...styles.miniature,
+                      outline: photoActive === photo.url ? '2px solid var(--gold-deep)' : '2px solid transparent',
+                    }}
+                  >
+                    <img src={photo.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </button>
+                ))}
+              </div>
             )}
-            {enPromo && <span style={styles.badgePromo}>-{pourcentageRemise}%</span>}
           </div>
 
           <div>
@@ -103,6 +127,8 @@ export default function Produit() {
 const styles = {
   grille: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 },
   imageZone: { aspectRatio: '1 / 1', background: 'var(--cream-deep)', borderRadius: 'var(--rayon)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' },
+  miniatures: { display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' },
+  miniature: { width: 56, height: 56, borderRadius: 8, overflow: 'hidden', border: 'none', padding: 0, cursor: 'pointer', background: 'var(--cream-deep)' },
   badgePromo: { position: 'absolute', top: 14, left: 14, background: 'var(--bordeaux-deep)', color: 'var(--white)', fontSize: 13, fontWeight: 800, padding: '5px 12px', borderRadius: 999 },
   badgePromoInline: { background: '#FBE4E1', color: 'var(--bordeaux-deep)', fontSize: 12, fontWeight: 800, padding: '4px 10px', borderRadius: 999 },
   filDAriane: { color: 'var(--brown-soft)', fontSize: 13, fontWeight: 700, marginBottom: 6 },
