@@ -37,9 +37,9 @@ export default function Layout({ children }) {
 
           <nav style={styles.nav}>
             <Link to="/boutique" style={styles.lienNav}>Boutique</Link>
-            <Link to="/qui-sommes-nous" style={styles.lienNav}>Qui sommes-nous</Link>
             <Link to="/actualites" style={styles.lienNav}>Actualités</Link>
             <Link to="/boutique?enPromo=true" style={{ ...styles.lienNav, color: 'var(--bordeaux-deep)' }}>Promotions</Link>
+            <Link to="/qui-sommes-nous" style={styles.lienNav}>Qui sommes-nous</Link>
             {client ? (
               <>
                 <Link to="/compte" style={styles.lienNav}>Mon compte</Link>
