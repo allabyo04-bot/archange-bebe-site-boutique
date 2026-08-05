@@ -19,11 +19,14 @@ export default function Commande() {
   const [telephoneClient, setTelephoneClient] = useState(client?.telephone || '');
   const [emailClient, setEmailClient] = useState(client?.email || '');
   const [notes, setNotes] = useState('');
+  const [modePaiement, setModePaiement] = useState('A_LA_LIVRAISON');
+  const [jekoDisponible, setJekoDisponible] = useState(false);
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
   const [erreur, setErreur] = useState('');
 
   useEffect(() => {
     appelApi('GET', '/lieux').then(setLieux).catch(() => {});
+    appelApi('GET', '/jeko-disponible').then((r) => setJekoDisponible(r.disponible)).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -56,6 +59,7 @@ export default function Commande() {
         adresseLivraison: modeLivraison === 'LIVRAISON' ? adresseLivraison : undefined,
         villeLivraison: modeLivraison === 'LIVRAISON' ? villeLivraison : undefined,
         notes: notes || undefined,
+        modePaiement,
         lignes: lignes.map((l) => ({ articleId: l.articleId, quantite: l.quantite })),
       });
       viderPanier();
@@ -133,13 +137,32 @@ export default function Commande() {
             <textarea className="champ" rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </label>
 
+          {jekoDisponible && (
+            <div>
+              <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Mode de paiement</p>
+              <div style={styles.choixMode}>
+                <button type="button" onClick={() => setModePaiement('A_LA_LIVRAISON')} style={modePaiement === 'A_LA_LIVRAISON' ? styles.modeActif : styles.mode}>
+                  💵 À la {modeLivraison === 'RETRAIT' ? 'récupération' : 'livraison'}
+                </button>
+                <button type="button" onClick={() => setModePaiement('JEKO')} style={modePaiement === 'JEKO' ? styles.modeActif : styles.mode}>
+                  💳 Payer en ligne
+                </button>
+              </div>
+              {modePaiement === 'JEKO' && (
+                <p style={{ fontSize: 12, color: 'var(--brown-soft)', marginTop: 8 }}>
+                  Tu seras redirigé(e) vers une page sécurisée pour payer par Wave, Orange Money, MTN ou carte bancaire.
+                </p>
+              )}
+            </div>
+          )}
+
           <div style={styles.recapTotal}>
-            <span>Total à régler {modeLivraison === 'RETRAIT' ? 'au retrait' : 'à la livraison'}</span>
+            <span>Total à régler {modePaiement === 'JEKO' ? 'en ligne' : (modeLivraison === 'RETRAIT' ? 'au retrait' : 'à la livraison')}</span>
             <strong style={{ color: 'var(--gold-deep)', fontSize: 20 }}>{total.toLocaleString('fr-FR')} F</strong>
           </div>
 
           <button type="submit" disabled={envoiEnCours} className="bouton-bordeaux" style={{ width: '100%' }}>
-            {envoiEnCours ? 'Envoi…' : 'Confirmer ma commande'}
+            {envoiEnCours ? 'Envoi…' : (modePaiement === 'JEKO' ? 'Confirmer et payer' : 'Confirmer ma commande')}
           </button>
         </form>
       </div>
