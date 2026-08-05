@@ -11,6 +11,8 @@ export default function ConfirmationCommande() {
   const [statut, setStatut] = useState(null); // null = chargement, sinon { modePaiement, paiementRecu, jekoPaymentUrl }
   const [lienOuvert, setLienOuvert] = useState(false);
   const [tentatives, setTentatives] = useState(0);
+  const [relanceEnCours, setRelanceEnCours] = useState(false);
+  const [erreurRelance, setErreurRelance] = useState('');
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -52,6 +54,21 @@ export default function ConfirmationCommande() {
     }
   }
 
+  async function relancerPaiement() {
+    setRelanceEnCours(true);
+    setErreurRelance('');
+    try {
+      const r = await appelApi('POST', `/commandes/${numero}/relancer-paiement`);
+      setStatut((prec) => ({ ...prec, jekoPaymentUrl: r.jekoPaymentUrl }));
+      window.open(r.jekoPaymentUrl, '_blank', 'noopener,noreferrer');
+      setLienOuvert(true);
+    } catch (err) {
+      setErreurRelance(err.message);
+    } finally {
+      setRelanceEnCours(false);
+    }
+  }
+
   const delaiDepasse = tentatives >= NB_TENTATIVES_MAX;
 
   return (
@@ -90,13 +107,19 @@ export default function ConfirmationCommande() {
         {statut && statut.modePaiement === 'JEKO' && !statut.paiementRecu && !statut.jekoPaymentUrl && (
           <>
             <div style={{ fontSize: 50, marginBottom: 10 }}>⚠️</div>
-            <h1 style={{ fontSize: 24, marginBottom: 10 }}>Un souci technique est survenu</h1>
+            <h1 style={{ fontSize: 24, marginBottom: 10 }}>Le paiement n'a pas pu démarrer</h1>
             <p style={{ color: 'var(--brown-soft)', marginBottom: 20 }}>
               Numéro de commande : <strong style={{ color: 'var(--brown-ink)' }}>{numero}</strong><br />
-              Le lien de paiement n'a pas pu être généré. Ta commande est bien enregistrée —
-              contacte-nous au 0505380826 pour finaliser le paiement.
+              Ta commande est bien enregistrée. Un souci technique passager a empêché la
+              création du lien de paiement.
             </p>
-            <Link to="/boutique" className="bouton-principal" style={{ display: 'inline-block' }}>Continuer mes achats</Link>
+            {erreurRelance && <p style={{ color: 'var(--error)', marginBottom: 12 }}>{erreurRelance}</p>}
+            <button onClick={relancerPaiement} disabled={relanceEnCours} className="bouton-bordeaux" style={{ width: '100%', marginBottom: 12 }}>
+              {relanceEnCours ? 'Nouvelle tentative…' : 'Réessayer le paiement'}
+            </button>
+            <p style={{ fontSize: 12, color: 'var(--brown-soft)' }}>
+              Si ça persiste, contacte-nous au 0505380826 en précisant ton numéro de commande.
+            </p>
           </>
         )}
 
