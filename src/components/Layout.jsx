@@ -37,6 +37,7 @@ export default function Layout({ children }) {
 
           <nav style={styles.nav}>
             <Link to="/boutique" style={styles.lienNav}>Boutique</Link>
+            <Link to="/qui-sommes-nous" style={styles.lienNav}>Qui sommes-nous</Link>
             <Link to="/actualites" style={styles.lienNav}>Actualités</Link>
             <Link to="/boutique?enPromo=true" style={{ ...styles.lienNav, color: 'var(--bordeaux-deep)' }}>Promotions</Link>
             {client ? (
@@ -64,6 +65,7 @@ export default function Layout({ children }) {
               <h4 style={{ color: 'var(--white)', marginBottom: 6 }}>Archange Bébé</h4>
               <p style={{ margin: 0, opacity: 0.85, fontSize: 14 }}>Angré Carrefour Adama Sanogho, après le 22ème</p>
               <p style={{ margin: 0, opacity: 0.85, fontSize: 14 }}>0505380826 / 2722242008</p>
+              <Link to="/qui-sommes-nous" style={{ color: 'var(--white)', opacity: 0.85, fontSize: 13, textDecoration: 'underline' }}>Qui sommes-nous ?</Link>
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>

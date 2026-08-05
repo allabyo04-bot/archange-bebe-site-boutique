@@ -46,6 +46,14 @@ export default function Accueil() {
         <div style={styles.itemConfiance}><span style={styles.iconeConfiance}>🎁</span> Fidélité dès 10 achats</div>
       </section>
 
+      <section className="conteneur" style={styles.blocApropos}>
+        <p style={styles.texteApropos}>
+          Archange Bébé est une boutique dédiée à la puériculture et à la mode enfant, pensée pour
+          accompagner les parents à chaque étape — de la naissance aux premiers pas.
+        </p>
+        <Link to="/qui-sommes-nous" style={styles.lienVoirTout}>En savoir plus sur nous →</Link>
+      </section>
+
       {promotions.length > 0 && (
         <section className="conteneur" style={{ marginTop: 48 }}>
           <div style={styles.enTeteSection}>
@@ -106,6 +114,8 @@ const styles = {
     display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 13,
   },
   iconeConfiance: { fontSize: 18 },
+  blocApropos: { marginTop: 40, textAlign: 'center', maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' },
+  texteApropos: { color: 'var(--brown-soft)', fontSize: 15, lineHeight: 1.7, marginBottom: 10 },
   enTeteSection: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 20, flexWrap: 'wrap', gap: 8 },
   titreSection: { fontSize: 26, margin: 0 },
   lienVoirTout: { color: 'var(--gold-deep)', fontWeight: 700, fontSize: 14 },
