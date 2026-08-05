@@ -87,7 +87,20 @@ export default function ConfirmationCommande() {
           </>
         )}
 
-        {statut && statut.modePaiement === 'JEKO' && !statut.paiementRecu && !delaiDepasse && (
+        {statut && statut.modePaiement === 'JEKO' && !statut.paiementRecu && !statut.jekoPaymentUrl && (
+          <>
+            <div style={{ fontSize: 50, marginBottom: 10 }}>⚠️</div>
+            <h1 style={{ fontSize: 24, marginBottom: 10 }}>Un souci technique est survenu</h1>
+            <p style={{ color: 'var(--brown-soft)', marginBottom: 20 }}>
+              Numéro de commande : <strong style={{ color: 'var(--brown-ink)' }}>{numero}</strong><br />
+              Le lien de paiement n'a pas pu être généré. Ta commande est bien enregistrée —
+              contacte-nous au 0505380826 pour finaliser le paiement.
+            </p>
+            <Link to="/boutique" className="bouton-principal" style={{ display: 'inline-block' }}>Continuer mes achats</Link>
+          </>
+        )}
+
+        {statut && statut.modePaiement === 'JEKO' && !statut.paiementRecu && statut.jekoPaymentUrl && !delaiDepasse && (
           <>
             <div style={{ fontSize: 50, marginBottom: 10 }}>💳</div>
             <h1 style={{ fontSize: 24, marginBottom: 10 }}>Finalise ton paiement</h1>
@@ -112,7 +125,7 @@ export default function ConfirmationCommande() {
           </>
         )}
 
-        {statut && statut.modePaiement === 'JEKO' && !statut.paiementRecu && delaiDepasse && (
+        {statut && statut.modePaiement === 'JEKO' && !statut.paiementRecu && statut.jekoPaymentUrl && delaiDepasse && (
           <>
             <div style={{ fontSize: 50, marginBottom: 10 }}>⏳</div>
             <h1 style={{ fontSize: 24, marginBottom: 10 }}>Paiement toujours en attente</h1>
