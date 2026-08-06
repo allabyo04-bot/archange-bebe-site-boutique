@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { appelApi } from '../lib/api';
 import CarteProduit from '../components/CarteProduit';
+import CarrouselPromo from '../components/CarrouselPromo';
 
 export default function Accueil() {
   const [familles, setFamilles] = useState([]);
@@ -38,6 +39,8 @@ export default function Accueil() {
           </div>
         </div>
       </section>
+
+      {promotions.length > 0 && <CarrouselPromo produits={promotions} />}
 
       <section className="conteneur" style={styles.bandeConfiance}>
         <div style={styles.itemConfiance}><span style={styles.iconeConfiance}>🏬</span> Retrait en boutique gratuit</div>
