@@ -6,11 +6,13 @@ import { appelApi } from '../lib/api';
 import { ajouterAuPanier } from '../lib/panier';
 import { estFavori, basculerFavori } from '../lib/favoris';
 import { marquerCommeVu } from '../lib/vus-recemment';
+import { useTitrePage } from '../lib/titre';
 
 export default function Produit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [produit, setProduit] = useState(null);
+  useTitrePage(produit?.designation, produit?.description || undefined);
   const [erreur, setErreur] = useState('');
   const [quantite, setQuantite] = useState(1);
   const [ajoute, setAjoute] = useState(false);

@@ -3,8 +3,11 @@ import { useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import CarteProduit from '../components/CarteProduit';
 import { appelApi } from '../lib/api';
+import { useTitrePage } from '../lib/titre';
 
 export default function Boutique() {
+  useTitrePage('Boutique', 'Découvrez tout le catalogue Archange Bébé : biberons, vêtements, poussettes, accessoires de puériculture et plus.');
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [produits, setProduits] = useState([]);
   const [familles, setFamilles] = useState([]);

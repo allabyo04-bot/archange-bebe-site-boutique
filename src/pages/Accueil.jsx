@@ -4,8 +4,11 @@ import Layout from '../components/Layout';
 import { appelApi } from '../lib/api';
 import CarteProduit from '../components/CarteProduit';
 import CarrouselPromo from '../components/CarrouselPromo';
+import { useTitrePage } from '../lib/titre';
 
 export default function Accueil() {
+  useTitrePage(null, "Archange Bébé, boutique de puériculture et mode enfant à Abidjan. Retrait en boutique ou livraison, paiement en ligne sécurisé.");
+
   const [familles, setFamilles] = useState([]);
   const [nouveautes, setNouveautes] = useState([]);
   const [promotions, setPromotions] = useState([]);
