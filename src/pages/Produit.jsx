@@ -100,7 +100,12 @@ export default function Produit() {
             )}
 
             {produit.enStock ? (
-              <p style={{ color: 'var(--succes)', fontWeight: 700, marginTop: 8 }}>✓ En stock</p>
+              <p style={{ color: 'var(--succes)', fontWeight: 700, marginTop: 8 }}>
+                ✓ En stock
+                {produit.stockActuel > 0 && produit.stockActuel <= 3 && (
+                  <span style={{ color: 'var(--bordeaux-deep)', fontWeight: 700 }}> — Plus que {produit.stockActuel} en stock !</span>
+                )}
+              </p>
             ) : (
               <p style={{ color: 'var(--error)', fontWeight: 700, marginTop: 8 }}>Rupture de stock</p>
             )}

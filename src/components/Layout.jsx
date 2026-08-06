@@ -57,6 +57,16 @@ export default function Layout({ children }) {
 
       <main style={{ flex: 1 }}>{children}</main>
 
+      <a
+        href="https://wa.me/2250505380826?text=Bonjour%20Archange%20B%C3%A9b%C3%A9%2C%20j%27ai%20une%20question"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={styles.boutonWhatsApp}
+        aria-label="Nous contacter sur WhatsApp"
+      >
+        💬
+      </a>
+
       <footer style={styles.pied}>
         <div className="conteneur" style={styles.piedContenu}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -66,6 +76,8 @@ export default function Layout({ children }) {
               <p style={{ margin: 0, opacity: 0.85, fontSize: 14 }}>Angré Carrefour Adama Sanogho, après le 22ème</p>
               <p style={{ margin: 0, opacity: 0.85, fontSize: 14 }}>0505380826 / 2722242008</p>
               <Link to="/qui-sommes-nous" style={{ color: 'var(--white)', opacity: 0.85, fontSize: 13, textDecoration: 'underline' }}>Qui sommes-nous ?</Link>
+              {' · '}
+              <Link to="/mentions-legales" style={{ color: 'var(--white)', opacity: 0.85, fontSize: 13, textDecoration: 'underline' }}>Mentions légales & CGV</Link>
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
@@ -86,6 +98,11 @@ export default function Layout({ children }) {
 }
 
 const styles = {
+  boutonWhatsApp: {
+    position: 'fixed', bottom: 20, right: 20, width: 56, height: 56, borderRadius: '50%',
+    background: '#25D366', color: 'var(--white)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: 28, textDecoration: 'none', boxShadow: '0 4px 14px rgba(0,0,0,0.25)', zIndex: 90,
+  },
   banniere: {
     background: 'var(--bordeaux-deep)', color: 'var(--white)', padding: '10px 20px',
     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, position: 'relative',

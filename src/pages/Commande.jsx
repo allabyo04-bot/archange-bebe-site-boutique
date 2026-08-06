@@ -164,6 +164,12 @@ export default function Commande() {
           <button type="submit" disabled={envoiEnCours} className="bouton-bordeaux" style={{ width: '100%' }}>
             {envoiEnCours ? 'Envoi…' : (modePaiement === 'JEKO' ? 'Confirmer et payer' : 'Confirmer ma commande')}
           </button>
+
+          <div style={styles.badgesConfiance}>
+            <span>🔒 Paiement sécurisé</span>
+            <span>✓ Produits vérifiés</span>
+            <span>📦 Retrait ou livraison</span>
+          </div>
         </form>
       </div>
     </Layout>
@@ -171,6 +177,10 @@ export default function Commande() {
 }
 
 const styles = {
+  badgesConfiance: {
+    display: 'flex', justifyContent: 'center', gap: 18, flexWrap: 'wrap', marginTop: 14,
+    fontSize: 12, color: 'var(--brown-soft)', fontWeight: 600,
+  },
   bandeauErreur: { padding: '10px 14px', borderRadius: 8, background: '#FBE4E1', color: 'var(--error)', fontWeight: 700, fontSize: 14 },
   choixMode: { display: 'flex', gap: 10 },
   mode: { flex: 1, padding: '14px 10px', borderRadius: 12, border: '1.5px solid var(--cream-deep)', background: 'var(--white)', cursor: 'pointer', fontWeight: 700 },

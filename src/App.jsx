@@ -9,6 +9,7 @@ import Compte from './pages/Compte';
 import MesCommandes from './pages/MesCommandes';
 import Actualites from './pages/Actualites';
 import QuiSommesNous from './pages/QuiSommesNous';
+import MentionsLegales from './pages/MentionsLegales';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
       <Route path="/mes-commandes" element={<MesCommandes />} />
       <Route path="/actualites" element={<Actualites />} />
       <Route path="/qui-sommes-nous" element={<QuiSommesNous />} />
+      <Route path="/mentions-legales" element={<MentionsLegales />} />
     </Routes>
   );
 }
