@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { appelApi, getClient } from '../lib/api';
@@ -9,6 +9,7 @@ export default function Commande() {
   const client = getClient();
   const lignes = obtenirPanier();
   const total = totalPanier(lignes);
+  const refErreur = useRef(null);
 
   const [lieux, setLieux] = useState([]);
   const [modeLivraison, setModeLivraison] = useState('RETRAIT');
@@ -23,6 +24,7 @@ export default function Commande() {
   const [jekoDisponible, setJekoDisponible] = useState(false);
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
   const [erreur, setErreur] = useState('');
+  const [champsInvalides, setChampsInvalides] = useState({});
 
   useEffect(() => {
     appelApi('GET', '/lieux').then(setLieux).catch(() => {});
@@ -33,20 +35,30 @@ export default function Commande() {
     if (lignes.length === 0) navigate('/panier');
   }, []); // eslint-disable-line
 
+  useEffect(() => {
+    if (erreur && refErreur.current) {
+      refErreur.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [erreur]);
+
   async function validerCommande(e) {
     e.preventDefault();
     setErreur('');
+    setChampsInvalides({});
 
     if (!nomClient.trim() || !telephoneClient.trim()) {
       setErreur('Nom et téléphone sont requis.');
+      setChampsInvalides({ nom: !nomClient.trim(), telephone: !telephoneClient.trim() });
       return;
     }
     if (modeLivraison === 'RETRAIT' && !lieuRetraitId) {
       setErreur('Choisis une boutique de retrait.');
+      setChampsInvalides({ lieu: true });
       return;
     }
     if (modeLivraison === 'LIVRAISON' && (!adresseLivraison.trim() || !villeLivraison.trim())) {
       setErreur('Adresse et ville de livraison sont requises.');
+      setChampsInvalides({ adresse: !adresseLivraison.trim(), ville: !villeLivraison.trim() });
       return;
     }
 
@@ -85,15 +97,15 @@ export default function Commande() {
         )}
 
         <form onSubmit={validerCommande} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {erreur && <div style={styles.bandeauErreur}>{erreur}</div>}
+          {erreur && <div ref={refErreur} style={styles.bandeauErreur}>⚠️ {erreur}</div>}
 
           <label className="etiquette-champ">
             Nom complet
-            <input className="champ" value={nomClient} onChange={(e) => setNomClient(e.target.value)} disabled={!!client} />
+            <input className="champ" style={champsInvalides.nom ? styles.champInvalide : undefined} value={nomClient} onChange={(e) => setNomClient(e.target.value)} disabled={!!client} />
           </label>
           <label className="etiquette-champ">
             Téléphone
-            <input className="champ" value={telephoneClient} onChange={(e) => setTelephoneClient(e.target.value)} disabled={!!client} />
+            <input className="champ" style={champsInvalides.telephone ? styles.champInvalide : undefined} value={telephoneClient} onChange={(e) => setTelephoneClient(e.target.value)} disabled={!!client} />
           </label>
           <label className="etiquette-champ">
             Email (optionnel)
@@ -112,7 +124,7 @@ export default function Commande() {
           {modeLivraison === 'RETRAIT' && (
             <label className="etiquette-champ">
               Boutique de retrait
-              <select className="champ" value={lieuRetraitId} onChange={(e) => setLieuRetraitId(e.target.value)}>
+              <select className="champ" style={champsInvalides.lieu ? styles.champInvalide : undefined} value={lieuRetraitId} onChange={(e) => setLieuRetraitId(e.target.value)}>
                 <option value="">— Choisir —</option>
                 {lieux.map((l) => <option key={l.id} value={l.id}>{l.nom}</option>)}
               </select>
@@ -123,11 +135,11 @@ export default function Commande() {
             <>
               <label className="etiquette-champ">
                 Adresse de livraison
-                <input className="champ" value={adresseLivraison} onChange={(e) => setAdresseLivraison(e.target.value)} placeholder="Quartier, rue, repère…" />
+                <input className="champ" style={champsInvalides.adresse ? styles.champInvalide : undefined} value={adresseLivraison} onChange={(e) => setAdresseLivraison(e.target.value)} placeholder="Quartier, rue, repère…" />
               </label>
               <label className="etiquette-champ">
                 Ville
-                <input className="champ" value={villeLivraison} onChange={(e) => setVilleLivraison(e.target.value)} placeholder="Ex: Abidjan" />
+                <input className="champ" style={champsInvalides.ville ? styles.champInvalide : undefined} value={villeLivraison} onChange={(e) => setVilleLivraison(e.target.value)} placeholder="Ex: Abidjan" />
               </label>
             </>
           )}
@@ -182,6 +194,7 @@ const styles = {
     fontSize: 12, color: 'var(--brown-soft)', fontWeight: 600,
   },
   bandeauErreur: { padding: '10px 14px', borderRadius: 8, background: '#FBE4E1', color: 'var(--error)', fontWeight: 700, fontSize: 14 },
+  champInvalide: { borderColor: 'var(--error)', outline: '2px solid #FBE4E1' },
   choixMode: { display: 'flex', gap: 10 },
   mode: { flex: 1, padding: '14px 10px', borderRadius: 12, border: '1.5px solid var(--cream-deep)', background: 'var(--white)', cursor: 'pointer', fontWeight: 700 },
   modeActif: { flex: 1, padding: '14px 10px', borderRadius: 12, border: '1.5px solid var(--gold-deep)', background: 'var(--cream-deep)', cursor: 'pointer', fontWeight: 700 },
