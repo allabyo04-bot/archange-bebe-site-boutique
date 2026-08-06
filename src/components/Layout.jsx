@@ -1,16 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { obtenirPanier, nombreArticlesPanier, ecouterPanier } from '../lib/panier';
+import { obtenirFavoris, ecouterFavoris } from '../lib/favoris';
 import { getClient, clearSession } from '../lib/api';
 
 export default function Layout({ children }) {
   const navigate = useNavigate();
   const [nombreArticles, setNombreArticles] = useState(nombreArticlesPanier(obtenirPanier()));
+  const [nombreFavoris, setNombreFavoris] = useState(obtenirFavoris().length);
   const [banniereVisible, setBanniereVisible] = useState(true);
   const client = getClient();
 
   useEffect(() => {
     return ecouterPanier((lignes) => setNombreArticles(nombreArticlesPanier(lignes)));
+  }, []);
+
+  useEffect(() => {
+    return ecouterFavoris((favoris) => setNombreFavoris(favoris.length));
   }, []);
 
   function seDeconnecter() {
@@ -48,6 +54,9 @@ export default function Layout({ children }) {
             ) : (
               <Link to="/compte" style={styles.lienNav}>Se connecter</Link>
             )}
+            <Link to="/mes-favoris" style={styles.lienNav} aria-label="Mes favoris">
+              🤍{nombreFavoris > 0 && <span style={styles.badgeFavoris}>{nombreFavoris}</span>}
+            </Link>
             <Link to="/panier" style={styles.boutonPanier}>
               🛒 Panier{nombreArticles > 0 && <span style={styles.badgePanier}>{nombreArticles}</span>}
             </Link>
@@ -127,6 +136,10 @@ const styles = {
   badgePanier: {
     background: 'var(--bordeaux-deep)', color: 'var(--white)', fontSize: 11, fontWeight: 800,
     borderRadius: 999, padding: '1px 7px', marginLeft: 2,
+  },
+  badgeFavoris: {
+    background: 'var(--bordeaux-deep)', color: 'var(--white)', fontSize: 10, fontWeight: 800,
+    borderRadius: 999, padding: '1px 6px', marginLeft: 2, verticalAlign: 'top',
   },
   pied: { background: 'var(--brown-deep)', color: 'var(--white)', marginTop: 60, padding: '32px 0' },
   piedContenu: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 },

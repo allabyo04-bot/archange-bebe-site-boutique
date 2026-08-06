@@ -10,6 +10,7 @@ import MesCommandes from './pages/MesCommandes';
 import Actualites from './pages/Actualites';
 import QuiSommesNous from './pages/QuiSommesNous';
 import MentionsLegales from './pages/MentionsLegales';
+import MesFavoris from './pages/MesFavoris';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
       <Route path="/confirmation/:numero" element={<ConfirmationCommande />} />
       <Route path="/compte" element={<Compte />} />
       <Route path="/mes-commandes" element={<MesCommandes />} />
+      <Route path="/mes-favoris" element={<MesFavoris />} />
       <Route path="/actualites" element={<Actualites />} />
       <Route path="/qui-sommes-nous" element={<QuiSommesNous />} />
       <Route path="/mentions-legales" element={<MentionsLegales />} />

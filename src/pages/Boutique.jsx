@@ -16,6 +16,7 @@ export default function Boutique() {
   const familleId = searchParams.get('familleId') || '';
   const sousFamilleId = searchParams.get('sousFamilleId') || '';
   const enPromo = searchParams.get('enPromo') === 'true';
+  const tri = searchParams.get('tri') || 'nom';
 
   useEffect(() => {
     appelApi('GET', '/familles').then(setFamilles).catch(() => {});
@@ -28,13 +29,14 @@ export default function Boutique() {
     if (familleId) params.set('familleId', familleId);
     if (sousFamilleId) params.set('sousFamilleId', sousFamilleId);
     if (enPromo) params.set('enPromo', 'true');
+    if (tri) params.set('tri', tri);
     params.set('page', page);
 
     appelApi('GET', `/produits?${params.toString()}`)
       .then((r) => { setProduits(r.produits); setTotalPages(r.totalPages); })
       .catch(() => {})
       .finally(() => setChargement(false));
-  }, [familleId, sousFamilleId, enPromo, page, recherche]);
+  }, [familleId, sousFamilleId, enPromo, tri, page, recherche]);
 
   const familleSelectionnee = familles.find((f) => String(f.id) === familleId);
 
@@ -53,6 +55,13 @@ export default function Boutique() {
   function quitterPromo() {
     setPage(1);
     setSearchParams({});
+  }
+
+  function changerTri(nouveauTri) {
+    setPage(1);
+    const params = Object.fromEntries(searchParams);
+    if (nouveauTri && nouveauTri !== 'nom') params.tri = nouveauTri; else delete params.tri;
+    setSearchParams(params);
   }
 
   return (
@@ -106,6 +115,20 @@ export default function Boutique() {
           </p>
         )}
 
+        {!chargement && produits.length > 0 && (
+          <div style={styles.ligneTri}>
+            <label style={{ fontSize: 13, color: 'var(--brown-soft)', fontWeight: 600 }}>
+              Trier par :{' '}
+              <select value={tri} onChange={(e) => changerTri(e.target.value)} style={styles.selectTri}>
+                <option value="nom">Nom (A → Z)</option>
+                <option value="prix-asc">Prix croissant</option>
+                <option value="prix-desc">Prix décroissant</option>
+                <option value="nouveaute">Nouveautés</option>
+              </select>
+            </label>
+          </div>
+        )}
+
         <div style={styles.grille}>
           {produits.map((p) => <CarteProduit key={p.id} produit={p} />)}
         </div>
@@ -135,4 +158,6 @@ const styles = {
     background: 'var(--cream-deep)', padding: '14px 18px', borderRadius: 12, fontWeight: 700, marginBottom: 24,
   },
   lienDiscret: { background: 'none', border: 'none', color: 'var(--gold-deep)', fontWeight: 700, cursor: 'pointer', fontSize: 13, fontFamily: 'inherit' },
+  ligneTri: { display: 'flex', justifyContent: 'flex-end', marginTop: 24 },
+  selectTri: { padding: '6px 10px', borderRadius: 8, border: '1px solid var(--cream-deep)', fontSize: 13, fontFamily: 'inherit' },
 };
