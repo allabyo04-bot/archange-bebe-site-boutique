@@ -100,11 +100,11 @@ export default function Commande() {
           {erreur && <div ref={refErreur} style={styles.bandeauErreur}>⚠️ {erreur}</div>}
 
           <label className="etiquette-champ">
-            Nom complet
+            Nom complet *
             <input className="champ" style={champsInvalides.nom ? styles.champInvalide : undefined} value={nomClient} onChange={(e) => setNomClient(e.target.value)} disabled={!!client} />
           </label>
           <label className="etiquette-champ">
-            Téléphone
+            Téléphone *
             <input className="champ" style={champsInvalides.telephone ? styles.champInvalide : undefined} value={telephoneClient} onChange={(e) => setTelephoneClient(e.target.value)} disabled={!!client} />
           </label>
           <label className="etiquette-champ">

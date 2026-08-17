@@ -63,12 +63,12 @@ export default function Compte() {
 
           {mode === 'inscription' && (
             <label className="etiquette-champ">
-              Nom complet
+              Nom complet *
               <input className="champ" value={nomComplet} onChange={(e) => setNomComplet(e.target.value)} required />
             </label>
           )}
           <label className="etiquette-champ">
-            Téléphone
+            Téléphone *
             <input className="champ" value={telephone} onChange={(e) => setTelephone(e.target.value)} required />
           </label>
           {mode === 'inscription' && (
