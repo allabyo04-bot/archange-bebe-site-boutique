@@ -289,3 +289,19 @@ img { max-width: 100%; display: block; }
   .grille-articles a > div:last-child { padding: 8px 8px 10px !important; }
   .grille-articles a > div:last-child > div:first-child { font-size: 12.5px !important; min-height: 32px !important; }
 }
+
+/* ===== Téléphone : en-tête et bandeaux plus compacts (sans effet sur ordinateur) ===== */
+@media (max-width: 600px) {
+  .bandeau-defilant { padding: 6px 0; }
+  .bandeau-defilant-item { font-size: 12.5px; padding: 0 14px; }
+  .bandeau-defilant-point { margin-left: 28px; }
+  .logo-entete { height: 44px !important; }
+  header > .conteneur { padding-top: 4px !important; padding-bottom: 4px !important; }
+  .bouton-menu { width: 40px; height: 40px; font-size: 20px; }
+  .bandeau-page { padding: 22px 0 20px; }
+  .bandeau-page-titre { font-size: 24px; }
+  .bandeau-page-sous-titre { font-size: 13.5px; margin-top: 4px; }
+  .hero-accueil { padding: 28px 0 64px; }
+  .hero-titre { font-size: 26px; margin: 12px 0 8px; }
+  .hero-paragraphe { margin-bottom: 16px; }
+}
