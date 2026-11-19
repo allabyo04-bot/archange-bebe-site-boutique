@@ -214,3 +214,22 @@ img { max-width: 100%; display: block; }
   .hero-voile { background: linear-gradient(180deg, rgba(19,41,75,0.75) 0%, rgba(19,41,75,0.85) 100%); }
   .hero-avec-photo { min-height: 0; }
 }
+
+/* Image d'accompagnement saisonnière (ex. vitrine de Noël) */
+.hero-avec-cote .hero-grille { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); }
+.hero-avec-photo .hero-voile { background: linear-gradient(90deg, rgba(19,41,75,0.9) 0%, rgba(27,58,99,0.72) 45%, rgba(91,36,72,0.55) 100%); }
+.hero-image-cote { display: flex; justify-content: center; }
+.hero-image-cote img {
+  width: 100%; max-width: 360px; border-radius: 20px; border: 6px solid #fff;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35); transform: rotate(2.5deg); animation: flotter 6s ease-in-out infinite;
+}
+@media (max-width: 900px) { .hero-image-cote { display: none; } .hero-avec-cote .hero-grille { grid-template-columns: minmax(0,1fr); } }
+
+/* Nous trouver */
+.bloc-nous-trouver {
+  display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 28px; align-items: center;
+  background: #fff; border-radius: 20px; padding: 18px; box-shadow: var(--ombre);
+}
+.nous-trouver-photo { width: 100%; border-radius: 14px; aspect-ratio: 1160 / 270; object-fit: cover; }
+.bouton-principal, .bouton-secondaire { display: inline-block; }
+@media (max-width: 820px) { .bloc-nous-trouver { grid-template-columns: minmax(0,1fr); } }

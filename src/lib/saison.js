@@ -9,6 +9,7 @@ const THEMES = {
     texte: "Jouets, layette, puériculture et idées cadeaux : préparez les fêtes en douceur. En boutique à Angré ou livré chez vous.",
     bouton2: { libelle: '🎁 Idées cadeaux', lien: '/boutique?famille=JOUET' },
     decor: ['❄️', '⭐', '🎁', '❄️', '✨', '🎄', '❄️', '⭐'],
+    imageCote: '/hero/noel-vitrine.jpg',
   },
   meres: {
     cle: 'meres',

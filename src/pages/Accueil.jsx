@@ -85,7 +85,7 @@ export default function Accueil() {
   return (
     <Layout>
       {/* ===== Grande bannière d'accueil ===== */}
-      <section className={`hero-accueil hero-${theme.cle}${photosBanniere.length ? ' hero-avec-photo' : ''}`}>
+      <section className={`hero-accueil hero-${theme.cle}${photosBanniere.length ? ' hero-avec-photo' : ''}${theme.imageCote ? ' hero-avec-cote' : ''}`}>
         {photosBanniere.map((url, i) => (
           <div key={url} className="hero-photo" style={{ backgroundImage: `url(${url})`, opacity: i === indexPhoto ? 1 : 0 }} aria-hidden="true" />
         ))}
@@ -137,7 +137,13 @@ export default function Accueil() {
             </div>
           </div>
 
-          {photosBanniere.length === 0 && photosCollage.length >= 3 && (
+          {theme.imageCote && (
+            <div className="hero-image-cote">
+              <img src={theme.imageCote} alt="Vitrine de Noël Archange Bébé" />
+            </div>
+          )}
+
+          {!theme.imageCote && photosBanniere.length === 0 && photosCollage.length >= 3 && (
             <div className="hero-collage" aria-hidden="true">
               {photosCollage.map((p, i) => (
                 <div key={p.id} className={`hero-collage-carte carte-${i}`}>
@@ -221,6 +227,22 @@ export default function Accueil() {
           </div>
         </section>
       )}
+
+      {/* ===== Nous trouver ===== */}
+      <section className="conteneur" style={{ marginTop: 64 }}>
+        <div className="bloc-nous-trouver">
+          <img src="/hero/facade.jpg" alt="Façade de la boutique Archange Bébé à Angré" className="nous-trouver-photo" />
+          <div className="nous-trouver-texte">
+            <h2 style={styles.titreSection}>Venez nous <span style={styles.motCouleur}>voir</span></h2>
+            <p style={{ margin: '10px 0 4px', fontWeight: 700 }}>📍 Angré Carrefour Adama Sanogho, après le 22ème</p>
+            <p style={{ margin: '0 0 16px', color: 'var(--brown-soft)' }}>📞 05 05 38 08 26 · 27 22 24 20 08</p>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <a href="https://www.google.com/maps/search/?api=1&query=Archange+B%C3%A9b%C3%A9+Angr%C3%A9+Abidjan" target="_blank" rel="noopener noreferrer" className="bouton-principal">🗺️ Itinéraire</a>
+              <a href="https://wa.me/2250505380826" target="_blank" rel="noopener noreferrer" className="bouton-secondaire">💬 WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ===== À propos ===== */}
       <section className="conteneur" style={styles.blocApropos}>
