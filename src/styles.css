@@ -249,3 +249,43 @@ img { max-width: 100%; display: block; }
 .galerie-boutique { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .galerie-boutique img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; box-shadow: var(--ombre); }
 @media (max-width: 600px) { .galerie-boutique { grid-template-columns: repeat(2, 1fr); } }
+
+/* ===== En-tête compact sur téléphone (menu ☰) ===== */
+.entete-mobile-actions { display: none; }
+.bouton-menu {
+  width: 44px; height: 44px; border-radius: 12px; border: none; background: var(--cream-deep);
+  font-size: 22px; color: var(--brown-deep); cursor: pointer;
+}
+@media (max-width: 820px) {
+  .entete-mobile-actions { display: flex; align-items: center; gap: 10px; }
+  .nav-principale { display: none !important; }
+  .nav-principale.ouvert {
+    display: flex !important; flex-direction: column; align-items: stretch !important; gap: 0 !important;
+    width: 100%; padding: 6px 0 10px; border-top: 1px solid var(--cream-deep);
+  }
+  .nav-principale.ouvert > a, .nav-principale.ouvert > button {
+    padding: 13px 4px; font-size: 16px !important; border-bottom: 1px solid var(--cream-deep); text-align: left;
+    background: none !important; border-radius: 0 !important;
+  }
+  .logo-entete { height: 56px !important; }
+
+  /* Familles de la boutique : une seule ligne qui défile au doigt */
+  .filtres-familles { flex-wrap: nowrap !important; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .filtres-familles::-webkit-scrollbar { display: none; }
+  .filtres-familles > * { flex-shrink: 0; }
+}
+@media (max-width: 600px) {
+  a[aria-label="Nous contacter sur WhatsApp"] { width: 50px !important; height: 50px !important; font-size: 24px !important; bottom: 14px !important; right: 14px !important; }
+}
+@media (max-width: 820px) {
+  .nav-principale.ouvert > a[href="/panier"] { display: none !important; }
+  .nav-principale.ouvert > a[href="/mes-favoris"]::after { content: ' Mes favoris'; }
+}
+
+/* Articles : 2 par ligne sur téléphone */
+@media (max-width: 600px) {
+  .grille-articles { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
+  .grille-articles a > div:first-child img { padding: 6px !important; }
+  .grille-articles a > div:last-child { padding: 8px 8px 10px !important; }
+  .grille-articles a > div:last-child > div:first-child { font-size: 12.5px !important; min-height: 32px !important; }
+}

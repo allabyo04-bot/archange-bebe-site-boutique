@@ -103,7 +103,7 @@ export default function Boutique() {
               style={{ maxWidth: 420, marginBottom: 20 }}
             />
 
-            <div style={styles.filtres}>
+            <div style={styles.filtres} className="filtres-familles">
               <button onClick={() => choisirFamille('')} style={!familleId ? styles.filtreActif : styles.filtre}>Tout</button>
               {familles.map((f) => (
                 <button key={f.id} onClick={() => choisirFamille(String(f.id))} style={familleId === String(f.id) ? styles.filtreActif : styles.filtre}>
@@ -113,7 +113,7 @@ export default function Boutique() {
             </div>
 
             {familleSelectionnee?.sousFamilles?.length > 0 && (
-              <div style={{ ...styles.filtres, marginTop: 8 }}>
+              <div style={{ ...styles.filtres, marginTop: 8 }} className="filtres-familles">
                 <button onClick={() => choisirSousFamille('')} style={!sousFamilleId ? styles.filtreActifPetit : styles.filtrePetit}>Toutes</button>
                 {familleSelectionnee.sousFamilles.map((sf) => (
                   <button key={sf.id} onClick={() => choisirSousFamille(String(sf.id))} style={sousFamilleId === String(sf.id) ? styles.filtreActifPetit : styles.filtrePetit}>
@@ -146,7 +146,7 @@ export default function Boutique() {
           </div>
         )}
 
-        <div style={styles.grille}>
+        <div style={styles.grille} className="grille-articles">
           {produits.map((p) => <CarteProduit key={p.id} produit={p} />)}
         </div>
 

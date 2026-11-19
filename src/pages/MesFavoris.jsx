@@ -25,7 +25,7 @@ export default function MesFavoris() {
             </Link>
           </div>
         ) : (
-          <div style={styles.grille}>
+          <div style={styles.grille} className="grille-articles">
             {favoris.map((f) => (
               <CarteProduit key={f.articleId} produit={{ ...f, id: f.articleId, enStock: true }} />
             ))}

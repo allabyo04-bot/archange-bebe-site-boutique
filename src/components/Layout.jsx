@@ -11,6 +11,7 @@ export default function Layout({ children, bandeau }) {
   const [nombreArticles, setNombreArticles] = useState(nombreArticlesPanier(obtenirPanier()));
   const [nombreFavoris, setNombreFavoris] = useState(obtenirFavoris().length);
   const client = getClient();
+  const [menuOuvert, setMenuOuvert] = useState(false);
 
   useEffect(() => {
     return ecouterPanier((lignes) => setNombreArticles(nombreArticlesPanier(lignes)));
@@ -35,7 +36,16 @@ export default function Layout({ children, bandeau }) {
             <img src="/logo-archange-bebe.png" alt="Archange Bébé" style={styles.logoImage} className="logo-entete" />
           </Link>
 
-          <nav style={styles.nav}>
+          <div className="entete-mobile-actions">
+            <Link to="/panier" style={styles.boutonPanier} aria-label="Panier">
+              🛒{nombreArticles > 0 && <span style={styles.badgePanier}>{nombreArticles}</span>}
+            </Link>
+            <button type="button" className="bouton-menu" onClick={() => setMenuOuvert((o) => !o)} aria-label="Menu" aria-expanded={menuOuvert}>
+              {menuOuvert ? '✕' : '☰'}
+            </button>
+          </div>
+
+          <nav style={styles.nav} className={`nav-principale${menuOuvert ? ' ouvert' : ''}`} onClick={() => setMenuOuvert(false)}>
             <Link to="/boutique" style={styles.lienNav}>Boutique</Link>
             <Link to="/actualites" style={styles.lienNav}>Actualités</Link>
             <Link to="/boutique?enPromo=true" style={{ ...styles.lienNav, color: 'var(--bordeaux-deep)' }}>Promotions</Link>

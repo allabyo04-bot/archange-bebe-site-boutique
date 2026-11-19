@@ -263,7 +263,7 @@ export default function Produit() {
         {similaires.length > 0 && (
           <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid var(--cream-deep)' }}>
             <h2 style={{ fontSize: 20, marginBottom: 20 }}>Vous aimerez aussi</h2>
-            <div style={styles.grilleSimilaires}>
+            <div style={styles.grilleSimilaires} className="grille-articles">
               {similaires.map((p) => <CarteProduit key={p.id} produit={p} />)}
             </div>
           </div>

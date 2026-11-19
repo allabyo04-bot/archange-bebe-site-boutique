@@ -208,7 +208,7 @@ export default function Accueil() {
               </div>
               <Link to="/boutique?q=KIT%20NAISSANCE" style={styles.lienVoirTout}>Voir tous les kits →</Link>
             </div>
-            <div style={styles.grilleProduits}>
+            <div style={styles.grilleProduits} className="grille-articles">
               {kits.map((p) => <CarteProduit key={p.id} produit={p} />)}
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function Accueil() {
             <h2 style={styles.titreSection}>Nos <span style={styles.motCouleur}>produits</span></h2>
             <Link to="/boutique" style={styles.lienVoirTout}>Voir tout →</Link>
           </div>
-          <div style={styles.grilleProduits}>
+          <div style={styles.grilleProduits} className="grille-articles">
             {nouveautes.map((p) => <CarteProduit key={p.id} produit={p} />)}
           </div>
         </section>
