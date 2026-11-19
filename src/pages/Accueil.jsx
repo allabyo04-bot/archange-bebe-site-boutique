@@ -1,134 +1,221 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { appelApi } from '../lib/api';
 import CarteProduit from '../components/CarteProduit';
 import CarrouselPromo from '../components/CarrouselPromo';
 import { useTitrePage } from '../lib/titre';
+import { themeDuJour } from '../lib/saison';
+
+// Icône et couleur de pastille selon le nom de la famille (base de gestion).
+const ICONES_FAMILLES = [
+  ['BIBERON', '🍼'], ['JOUET', '🧸'], ['VETEMENT', '👕'], ['CHAUSSURE', '👟'], ['COSMETIQUE', '🧴'],
+  ['COUCHE', '👶'], ['COTON', '☁️'], ['LITERIE', '🛏️'], ['PISCINE', '🏊'], ['MAMAN', '🤰'],
+  ['PUERICULTURE', '🍼'], ['SAC', '👜'], ['SERVIETTE', '🛁'], ['SUCRERIE', '🍬'], ['TRANSPORT', '🚼'],
+  ['SCOLAIRE', '🎒'], ['LINGERIE', '🩲'], ['ACCESSOIRE', '🎀'], ['KIT', '🎁'],
+];
+const COULEURS_PASTILLES = ['#F7C6D9', '#BFD4F2', '#FBE3A6', '#C9EBDD', '#E3D3F5'];
+
+function iconeFamille(nom) {
+  const n = nom.toUpperCase();
+  const trouve = ICONES_FAMILLES.find(([cle]) => n.includes(cle));
+  return trouve ? trouve[1] : '✨';
+}
 
 export default function Accueil() {
   useTitrePage(null, "Archange Bébé, boutique de puériculture et mode enfant à Abidjan. Retrait en boutique ou livraison, paiement en ligne sécurisé.");
+  const navigate = useNavigate();
+  const theme = themeDuJour();
 
   const [familles, setFamilles] = useState([]);
   const [nouveautes, setNouveautes] = useState([]);
   const [promotions, setPromotions] = useState([]);
+  const [kits, setKits] = useState([]);
+  const [totalArticles, setTotalArticles] = useState(null);
+  const [recherche, setRecherche] = useState('');
 
   useEffect(() => {
     appelApi('GET', '/familles').then(setFamilles).catch(() => {});
-    appelApi('GET', '/produits?page=1').then((r) => setNouveautes(r.produits.slice(0, 8))).catch(() => {});
+    appelApi('GET', '/produits?page=1').then((r) => {
+      setNouveautes(r.produits.slice(0, 8));
+      if (r.total) setTotalArticles(r.total);
+    }).catch(() => {});
     appelApi('GET', '/produits?enPromo=true&page=1').then((r) => setPromotions(r.produits.slice(0, 8))).catch(() => {});
+    appelApi('GET', '/produits?q=KIT%20NAISSANCE&page=1').then((r) => setKits(r.produits.slice(0, 4))).catch(() => {});
   }, []);
+
+  // Familles affichées : on écarte les noms trop courts (ex. « V ») qui ne parlent pas aux clients.
+  const famillesVisibles = familles.filter((f) => f.nom && f.nom.trim().length > 2 && f.nom.trim().toUpperCase() !== 'DIVERS');
+
+  // Collage de la grande bannière : les articles qui ont une photo.
+  const photosCollage = [...promotions, ...nouveautes].filter((p) => p.photoUrl)
+    .filter((p, i, t) => t.findIndex((x) => x.id === p.id) === i).slice(0, 4);
+
+  function lancerRecherche(e) {
+    e.preventDefault();
+    const q = recherche.trim();
+    navigate(q ? `/boutique?q=${encodeURIComponent(q)}` : '/boutique');
+  }
 
   return (
     <Layout>
-      <section style={styles.hero}>
-        <div className="conteneur" style={styles.heroContenu}>
-          <div style={{ maxWidth: 540 }}>
-            <div><span style={styles.pastilleSlogan}>Pour Le Bonheur Des Boudchou</span></div>
-            <span style={styles.heroSurTitre}>Puériculture & mode enfant</span>
-            <p style={styles.heroTexte}>
-              Découvrez notre sélection en boutique, disponible aussi en ligne — retrait en boutique ou livraison.
-            </p>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
-              <Link to="/boutique" className="bouton-principal" style={{ display: 'inline-block' }}>
-                Découvrir la boutique
-              </Link>
-              {promotions.length > 0 && (
-                <Link to="/boutique?enPromo=true" className="bouton-bordeaux" style={{ display: 'inline-block' }}>
-                  🎉 Voir les promotions
-                </Link>
+      {/* ===== Grande bannière d'accueil ===== */}
+      <section className={`hero-accueil hero-${theme.cle}`}>
+        <div className="hero-decor" aria-hidden="true">
+          {theme.decor.map((d, i) => (
+            <span key={i} className="hero-decor-item" style={{ left: `${6 + i * 12}%`, animationDelay: `${i * 1.3}s`, fontSize: 14 + (i % 3) * 8 }}>{d}</span>
+          ))}
+        </div>
+
+        <div className="conteneur hero-grille">
+          <div className="hero-texte">
+            <span className="hero-badge">{theme.badge}</span>
+            <h1 className="hero-titre">{theme.titre}</h1>
+            <p className="hero-slogan">💙 Pour Le Bonheur Des Boudchou 💗</p>
+            <p className="hero-paragraphe">{theme.texte}</p>
+
+            <form onSubmit={lancerRecherche} className="hero-recherche">
+              <span aria-hidden="true">🔍</span>
+              <input
+                value={recherche}
+                onChange={(e) => setRecherche(e.target.value)}
+                placeholder="Ex : couche, biberon, poussette…"
+                aria-label="Rechercher un produit"
+              />
+              <button type="submit">Rechercher</button>
+            </form>
+
+            <div className="hero-boutons">
+              <Link to="/boutique" className="hero-bouton-plein">🛍️ Voir la boutique</Link>
+              <Link to={theme.bouton2.lien} className="hero-bouton-contour">{theme.bouton2.libelle}</Link>
+            </div>
+
+            <div className="hero-chiffres">
+              {totalArticles && (
+                <div><strong>{(Math.floor(totalArticles / 100) * 100).toLocaleString('fr-FR')}+</strong><span>articles</span></div>
               )}
+              {famillesVisibles.length > 0 && (
+                <div><strong>{famillesVisibles.length}</strong><span>univers</span></div>
+              )}
+              <div><strong>0–15 ans</strong><span>de la grossesse à l'ado</span></div>
             </div>
           </div>
+
+          {photosCollage.length >= 3 && (
+            <div className="hero-collage" aria-hidden="true">
+              {photosCollage.map((p, i) => (
+                <div key={p.id} className={`hero-collage-carte carte-${i}`}>
+                  <img src={p.photoUrl} alt="" />
+                </div>
+              ))}
+              <img src="/logo-archange-bebe.png" alt="" className="hero-collage-logo" />
+            </div>
+          )}
         </div>
       </section>
 
-      {promotions.length > 0 && <CarrouselPromo produits={promotions} />}
-
+      {/* ===== Bande de confiance ===== */}
       <section className="conteneur" style={styles.bandeConfiance}>
-        <div style={styles.itemConfiance}><span style={styles.iconeConfiance}>🏬</span> Retrait en boutique gratuit</div>
+        <div style={styles.itemConfiance}><span style={styles.iconeConfiance}>🏬</span> Retrait gratuit à Angré</div>
         <div style={styles.itemConfiance}><span style={styles.iconeConfiance}>🚚</span> Livraison à Abidjan</div>
-        <div style={styles.itemConfiance}><span style={styles.iconeConfiance}>✓</span> Produits vérifiés en boutique</div>
-        <div style={styles.itemConfiance}><span style={styles.iconeConfiance}>🎁</span> Fidélité dès 10 achats</div>
+        <div style={styles.itemConfiance}><span style={styles.iconeConfiance}>📱</span> Wave, Orange Money, carte</div>
+        <div style={styles.itemConfiance}><span style={styles.iconeConfiance}>🎁</span> Programme de fidélité</div>
       </section>
 
-      <section className="conteneur" style={styles.blocApropos}>
-        <p style={styles.texteApropos}>
-          Archange Bébé est une boutique dédiée à la puériculture et à la mode enfant, pensée pour
-          accompagner les parents à chaque étape — de la naissance aux premiers pas.
-        </p>
-        <Link to="/qui-sommes-nous" style={styles.lienVoirTout}>En savoir plus sur nous →</Link>
-      </section>
-
-      {promotions.length > 0 && (
-        <section className="conteneur" style={{ marginTop: 48 }}>
-          <div style={styles.enTeteSection}>
-            <h2 style={styles.titreSection}>🎉 Promotions du moment</h2>
-            <Link to="/boutique?enPromo=true" style={styles.lienVoirTout}>Voir tout →</Link>
-          </div>
-          <div style={styles.grilleProduits}>
-            {promotions.map((p) => <CarteProduit key={p.id} produit={p} />)}
-          </div>
-        </section>
-      )}
-
-      {familles.length > 0 && (
+      {/* ===== Univers en pastilles ===== */}
+      {famillesVisibles.length > 0 && (
         <section className="conteneur" style={{ marginTop: 56 }}>
-          <h2 style={styles.titreSection}>Nos univers</h2>
-          <div style={styles.grilleFamilles}>
-            {familles.slice(0, 8).map((f) => (
-              <Link key={f.id} to={`/boutique?familleId=${f.id}`} style={styles.carteFamille}>
-                {f.nom}
+          <div style={styles.enTeteSection}>
+            <h2 style={styles.titreSection}>Explorer par <span style={styles.motCouleur}>univers</span></h2>
+            <Link to="/boutique" style={styles.lienVoirTout}>Tout voir →</Link>
+          </div>
+          <div className="pastilles-familles">
+            {famillesVisibles.map((f, i) => (
+              <Link key={f.id} to={`/boutique?familleId=${f.id}`} className="pastille-famille">
+                <span className="pastille-rond" style={{ background: COULEURS_PASTILLES[i % COULEURS_PASTILLES.length] }}>
+                  {iconeFamille(f.nom)}
+                </span>
+                <span className="pastille-nom">{f.nom}</span>
               </Link>
             ))}
           </div>
         </section>
       )}
 
-      {nouveautes.length > 0 && (
-        <section className="conteneur" style={{ marginTop: 56, marginBottom: 60 }}>
+      {/* ===== Promotions en carrousel ===== */}
+      {promotions.length > 0 && (
+        <section className="conteneur" style={{ marginTop: 56 }}>
           <div style={styles.enTeteSection}>
-            <h2 style={styles.titreSection}>Nos produits</h2>
-            <Link to="/boutique" style={styles.lienVoirTout}>Voir tout →</Link>
+            <h2 style={styles.titreSection}>🎉 Promotions <span style={styles.motCouleur}>du moment</span></h2>
+            <Link to="/boutique?enPromo=true" style={styles.lienVoirTout}>Voir tout →</Link>
           </div>
-          <div style={styles.grilleProduits}>
-            {nouveautes.map((p) => (
-              <CarteProduit key={p.id} produit={p} />
-            ))}
+          <div style={{ borderRadius: 20, overflow: 'hidden', boxShadow: 'var(--ombre)' }}>
+            <CarrouselPromo produits={promotions} />
           </div>
         </section>
       )}
+
+      {/* ===== Kits naissance ===== */}
+      {kits.length > 0 && (
+        <section style={styles.sectionKits}>
+          <div className="conteneur">
+            <div style={styles.enTeteSection}>
+              <div>
+                <h2 style={styles.titreSection}>🎁 Kits <span style={styles.motCouleur}>naissance</span></h2>
+                <p style={styles.sousTitre}>Tout le nécessaire pour accueillir bébé, réuni dans un seul kit.</p>
+              </div>
+              <Link to="/boutique?q=KIT%20NAISSANCE" style={styles.lienVoirTout}>Voir tous les kits →</Link>
+            </div>
+            <div style={styles.grilleProduits}>
+              {kits.map((p) => <CarteProduit key={p.id} produit={p} />)}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ===== Nos produits ===== */}
+      {nouveautes.length > 0 && (
+        <section className="conteneur" style={{ marginTop: 56, marginBottom: 20 }}>
+          <div style={styles.enTeteSection}>
+            <h2 style={styles.titreSection}>Nos <span style={styles.motCouleur}>produits</span></h2>
+            <Link to="/boutique" style={styles.lienVoirTout}>Voir tout →</Link>
+          </div>
+          <div style={styles.grilleProduits}>
+            {nouveautes.map((p) => <CarteProduit key={p.id} produit={p} />)}
+          </div>
+        </section>
+      )}
+
+      {/* ===== À propos ===== */}
+      <section className="conteneur" style={styles.blocApropos}>
+        <img src="/logo-archange-bebe.png" alt="Archange Bébé" style={{ height: 70, margin: '0 auto 12px' }} />
+        <p style={styles.texteApropos}>
+          Archange Bébé accompagne les parents à chaque étape, de la grossesse jusqu'aux 15 ans de l'enfant :
+          puériculture, layette, vêtements, jouets et accessoires, sélectionnés avec soin dans notre boutique d'Angré.
+        </p>
+        <Link to="/qui-sommes-nous" style={styles.lienVoirTout}>En savoir plus sur nous →</Link>
+      </section>
     </Layout>
   );
 }
 
 const styles = {
-  hero: { background: 'linear-gradient(135deg, var(--cream-deep), var(--cream))', padding: '64px 0' },
-  heroContenu: { display: 'flex', alignItems: 'center' },
-  heroSurTitre: { color: 'var(--bordeaux-deep)', fontWeight: 800, fontSize: 13, letterSpacing: 1.5, textTransform: 'uppercase' },
-  pastilleSlogan: {
-    display: 'inline-block', background: 'var(--bordeaux-deep)', color: 'var(--white)',
-    fontWeight: 800, fontSize: 16, padding: '10px 24px', borderRadius: 999, marginBottom: 18,
-  },
-  heroTexte: { fontSize: 16, color: 'var(--brown-soft)', lineHeight: 1.6, marginTop: 14, marginBottom: 20 },
   bandeConfiance: {
-    display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12,
-    marginTop: -28, position: 'relative', zIndex: 5,
+    display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12,
+    marginTop: -30, position: 'relative', zIndex: 5,
   },
   itemConfiance: {
-    background: 'var(--white)', borderRadius: 12, padding: '14px 16px', boxShadow: 'var(--ombre)',
-    display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 13,
+    background: 'var(--white)', borderRadius: 14, padding: '16px 18px', boxShadow: '0 8px 24px rgba(31,46,69,0.12)',
+    display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, fontSize: 14,
   },
-  iconeConfiance: { fontSize: 18 },
-  blocApropos: { marginTop: 40, textAlign: 'center', maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' },
-  texteApropos: { color: 'var(--brown-soft)', fontSize: 15, lineHeight: 1.7, marginBottom: 10 },
-  enTeteSection: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 20, flexWrap: 'wrap', gap: 8 },
-  titreSection: { fontSize: 26, margin: 0 },
+  iconeConfiance: { fontSize: 22 },
+  enTeteSection: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 22, flexWrap: 'wrap', gap: 8 },
+  titreSection: { fontSize: 28, margin: 0 },
+  motCouleur: { color: 'var(--bordeaux-deep)' },
+  sousTitre: { margin: '6px 0 0', color: 'var(--brown-soft)', fontSize: 15 },
   lienVoirTout: { color: 'var(--gold-deep)', fontWeight: 700, fontSize: 14 },
-  grilleFamilles: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 },
-  carteFamille: {
-    background: 'var(--white)', borderRadius: 12, padding: '20px 16px', textAlign: 'center',
-    fontWeight: 700, boxShadow: 'var(--ombre)', border: '1px solid var(--cream-deep)',
-  },
   grilleProduits: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 },
+  sectionKits: { marginTop: 64, padding: '48px 0', background: 'linear-gradient(135deg, #FDEEF4, #EAF1FB)' },
+  blocApropos: { marginTop: 64, textAlign: 'center', maxWidth: 680, marginLeft: 'auto', marginRight: 'auto' },
+  texteApropos: { color: 'var(--brown-soft)', fontSize: 15, lineHeight: 1.7, marginBottom: 10 },
 };

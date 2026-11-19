@@ -83,3 +83,113 @@ img { max-width: 100%; display: block; }
   .grille-produit { grid-template-columns: 1fr !important; gap: 20px !important; }
   .logo-entete { height: 56px !important; }
 }
+
+/* ===== Bandeau défilant (haut de page) ===== */
+.bandeau-defilant {
+  background: linear-gradient(90deg, var(--bordeaux-deep), #E46A9A, var(--bordeaux-deep));
+  overflow: hidden; white-space: nowrap; padding: 9px 0;
+}
+.bandeau-defilant-piste { display: inline-flex; animation: defilement 40s linear infinite; }
+.bandeau-defilant:hover .bandeau-defilant-piste { animation-play-state: paused; }
+.bandeau-defilant-item { color: #fff; font-weight: 700; font-size: 13.5px; padding: 0 22px; display: inline-flex; align-items: center; }
+.bandeau-defilant-point { margin-left: 44px; opacity: 0.6; }
+@keyframes defilement { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ===== Grande bannière d'accueil ===== */
+.hero-accueil {
+  position: relative; overflow: hidden; color: #fff; padding: 64px 0 88px;
+  background: radial-gradient(circle at 85% 20%, rgba(255,255,255,0.18), transparent 40%),
+              linear-gradient(120deg, #1B3A63 0%, #2E4E9E 40%, #6E93C4 70%, #E88FB0 100%);
+}
+.hero-noel { background: radial-gradient(circle at 85% 20%, rgba(255,255,255,0.2), transparent 40%),
+              linear-gradient(120deg, #13294B 0%, #2E4E9E 45%, #8E3159 80%, #D6407A 100%); }
+.hero-meres { background: linear-gradient(120deg, #8E3159 0%, #D6407A 50%, #F2A7C3 100%); }
+.hero-grille { position: relative; z-index: 2; display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; align-items: center; }
+.hero-badge {
+  display: inline-block; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.35);
+  padding: 7px 16px; border-radius: 999px; font-weight: 700; font-size: 13.5px; backdrop-filter: blur(4px);
+}
+.hero-titre { color: #fff; font-size: 46px; line-height: 1.1; margin: 18px 0 10px; font-weight: 800; }
+.hero-slogan { font-weight: 800; font-size: 17px; margin: 0 0 10px; color: #FFE3EE; }
+.hero-paragraphe { font-size: 16px; line-height: 1.65; opacity: 0.92; margin: 0 0 22px; max-width: 560px; }
+.hero-recherche {
+  display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 999px;
+  padding: 6px 6px 6px 18px; max-width: 560px; box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+.hero-recherche input { flex: 1; border: none; outline: none; font-size: 15px; font-family: inherit; color: var(--brown-ink); background: transparent; min-width: 0; }
+.hero-recherche button {
+  background: var(--bordeaux-deep); color: #fff; border: none; border-radius: 999px;
+  padding: 11px 20px; font-weight: 800; cursor: pointer; font-size: 14px;
+}
+.hero-boutons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+.hero-bouton-plein, .hero-bouton-contour {
+  padding: 13px 24px; border-radius: 14px; font-weight: 800; font-size: 15px; transition: transform .15s ease;
+}
+.hero-bouton-plein { background: #fff; color: var(--gold-deep); box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
+.hero-bouton-contour { border: 2px solid rgba(255,255,255,0.8); color: #fff; }
+.hero-bouton-plein:hover, .hero-bouton-contour:hover { transform: translateY(-2px); }
+.hero-chiffres { display: flex; gap: 32px; margin-top: 30px; flex-wrap: wrap; }
+.hero-chiffres div { display: flex; flex-direction: column; }
+.hero-chiffres strong { font-family: var(--font-display); font-size: 28px; color: #FFD66B; line-height: 1.1; }
+.hero-chiffres span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; }
+
+/* Collage de photos produits */
+.hero-collage { position: relative; height: 420px; }
+.hero-collage-carte {
+  position: absolute; width: 46%; aspect-ratio: 1; background: #fff; border-radius: 22px; padding: 12px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.25); animation: flotter 6s ease-in-out infinite;
+}
+.hero-collage-carte img { width: 100%; height: 100%; object-fit: contain; }
+.hero-collage-carte.carte-0 { top: 0; left: 4%; transform: rotate(-6deg); }
+.hero-collage-carte.carte-1 { top: 6%; right: 2%; transform: rotate(5deg); animation-delay: 1.5s; }
+.hero-collage-carte.carte-2 { bottom: 0; left: 12%; transform: rotate(4deg); animation-delay: 3s; }
+.hero-collage-carte.carte-3 { bottom: 4%; right: 6%; transform: rotate(-4deg); animation-delay: 4.5s; }
+.hero-collage-logo {
+  position: absolute; top: 50%; left: 50%; width: 120px; height: 120px; object-fit: contain;
+  transform: translate(-50%, -50%); background: #fff; border-radius: 50%; padding: 14px; z-index: 3;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+@keyframes flotter { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+
+/* Décor animé (flocons, étoiles, cœurs) */
+.hero-decor { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.hero-decor-item { position: absolute; top: -40px; opacity: 0.75; animation: tomber 12s linear infinite; }
+@keyframes tomber {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  100% { transform: translateY(620px) rotate(200deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-decor-item, .hero-collage-carte, .bandeau-defilant-piste { animation: none; }
+}
+
+/* Pastilles des univers */
+.pastilles-familles { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 18px 12px; }
+.pastille-famille { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.pastille-rond {
+  width: 92px; height: 92px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 40px; box-shadow: 0 6px 16px rgba(31,46,69,0.12); transition: transform .2s ease;
+}
+.pastille-famille:hover .pastille-rond { transform: translateY(-4px) scale(1.05); }
+.pastille-nom { font-weight: 800; font-size: 12.5px; color: var(--brown-deep); }
+
+@media (max-width: 900px) {
+  .hero-grille { grid-template-columns: 1fr; }
+  .hero-collage { display: none; }
+  .hero-titre { font-size: 34px; }
+}
+@media (max-width: 520px) {
+  .hero-accueil { padding: 40px 0 72px; }
+  .hero-titre { font-size: 28px; }
+  .hero-recherche button { padding: 10px 14px; }
+  .pastille-rond { width: 72px; height: 72px; font-size: 32px; }
+}
+.hero-texte { min-width: 0; }
+@media (max-width: 900px) { .hero-grille { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) {
+  .hero-chiffres { gap: 20px; }
+  .hero-chiffres strong { font-size: 22px; }
+  .hero-paragraphe { font-size: 15px; }
+  .pastilles-familles { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 14px 8px; }
+  .pastille-nom { font-size: 11px; }
+}

@@ -39,8 +39,8 @@ export default function CarteProduit({ produit }) {
 
 const styles = {
   carte: { display: 'block', background: 'var(--white)', borderRadius: 'var(--rayon)', overflow: 'hidden', boxShadow: 'var(--ombre)', transition: 'transform 0.15s ease, box-shadow 0.15s ease' },
-  imageZone: { aspectRatio: '1 / 1', background: 'var(--cream-deep)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' },
-  image: { width: '100%', height: '100%', objectFit: 'cover' },
+  imageZone: { aspectRatio: '1 / 1', background: 'var(--white)', borderBottom: '1px solid var(--cream-deep)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' },
+  image: { width: '100%', height: '100%', objectFit: 'contain', padding: 12 },
   badgeRupture: { position: 'absolute', top: 8, right: 8, background: 'var(--error)', color: 'var(--white)', fontSize: 11, fontWeight: 800, padding: '3px 9px', borderRadius: 999 },
   badgePromo: { position: 'absolute', top: 8, left: 8, background: 'var(--bordeaux-deep)', color: 'var(--white)', fontSize: 11, fontWeight: 800, padding: '3px 9px', borderRadius: 999 },
   designation: { fontWeight: 700, fontSize: 14, lineHeight: 1.3, minHeight: 36, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' },

@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { obtenirPanier, nombreArticlesPanier, ecouterPanier } from '../lib/panier';
 import { obtenirFavoris, ecouterFavoris } from '../lib/favoris';
 import { getClient, clearSession } from '../lib/api';
+import BandeauDefilant from './BandeauDefilant';
 
 export default function Layout({ children }) {
   const navigate = useNavigate();
   const [nombreArticles, setNombreArticles] = useState(nombreArticlesPanier(obtenirPanier()));
   const [nombreFavoris, setNombreFavoris] = useState(obtenirFavoris().length);
-  const [banniereVisible, setBanniereVisible] = useState(true);
   const client = getClient();
 
   useEffect(() => {
@@ -26,14 +26,7 @@ export default function Layout({ children }) {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {banniereVisible && (
-        <div style={styles.banniere}>
-          <Link to="/boutique?enPromo=true" style={styles.banniereLien}>
-            🎉 Promotions en cours sur une sélection d'articles — profitez-en avant la fin du stock !
-          </Link>
-          <button onClick={() => setBanniereVisible(false)} style={styles.banniereFermer} aria-label="Fermer">✕</button>
-        </div>
-      )}
+      <BandeauDefilant />
 
       <header style={styles.entete}>
         <div className="conteneur" style={styles.enteteContenu}>

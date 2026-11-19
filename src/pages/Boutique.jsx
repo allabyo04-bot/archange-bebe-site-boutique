@@ -14,7 +14,7 @@ export default function Boutique() {
   const [chargement, setChargement] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [recherche, setRecherche] = useState('');
+  const [recherche, setRecherche] = useState(searchParams.get('q') || '');
 
   const familleId = searchParams.get('familleId') || '';
   const sousFamilleId = searchParams.get('sousFamilleId') || '';
@@ -25,7 +25,22 @@ export default function Boutique() {
     appelApi('GET', '/familles').then(setFamilles).catch(() => {});
   }, []);
 
+  // Lien du type /boutique?famille=JOUET (bandeau, page d'accueil) : on retrouve la famille par son nom.
+  const nomFamille = searchParams.get('famille');
   useEffect(() => {
+    if (!nomFamille || familles.length === 0) return;
+    const f = familles.find((x) => x.nom.trim().toUpperCase() === nomFamille.trim().toUpperCase());
+    setSearchParams(f ? { familleId: String(f.id) } : {}, { replace: true });
+  }, [nomFamille, familles]);
+
+  // Recherche lancée depuis la page d'accueil (/boutique?q=...)
+  const qUrl = searchParams.get('q');
+  useEffect(() => {
+    if (qUrl !== null) { setRecherche(qUrl); setPage(1); }
+  }, [qUrl]);
+
+  useEffect(() => {
+    if (nomFamille) return;
     setChargement(true);
     const params = new URLSearchParams();
     if (recherche.trim()) params.set('q', recherche.trim());
@@ -39,7 +54,7 @@ export default function Boutique() {
       .then((r) => { setProduits(r.produits); setTotalPages(r.totalPages); })
       .catch(() => {})
       .finally(() => setChargement(false));
-  }, [familleId, sousFamilleId, enPromo, tri, page, recherche]);
+  }, [familleId, sousFamilleId, enPromo, tri, page, recherche, nomFamille]);
 
   const familleSelectionnee = familles.find((f) => String(f.id) === familleId);
 
