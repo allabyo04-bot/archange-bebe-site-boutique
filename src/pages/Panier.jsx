@@ -12,9 +12,8 @@ export default function Panier() {
   const total = totalPanier(lignes);
 
   return (
-    <Layout>
+    <Layout bandeau={{ photo: '/hero/page-panier.jpg', titre: 'Mon panier' }}>
       <div className="conteneur" style={{ padding: '32px 20px 60px', maxWidth: 800 }}>
-        <h1 style={{ fontSize: 28, marginBottom: 24 }}>Mon panier</h1>
 
         {lignes.length === 0 && (
           <div style={{ textAlign: 'center', padding: '40px 0' }}>

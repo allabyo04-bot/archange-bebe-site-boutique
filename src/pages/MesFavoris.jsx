@@ -12,9 +12,8 @@ export default function MesFavoris() {
   }, []);
 
   return (
-    <Layout>
+    <Layout bandeau={{ photo: '/hero/page-favoris.jpg', titre: 'Mes favoris', sousTitre: 'Les articles que vous avez gardés de côté.' }}>
       <div className="conteneur" style={{ padding: '32px 20px 60px' }}>
-        <h1 style={{ fontSize: 28, marginBottom: 20 }}>Mes favoris</h1>
 
         {favoris.length === 0 ? (
           <div>

@@ -4,8 +4,9 @@ import { obtenirPanier, nombreArticlesPanier, ecouterPanier } from '../lib/panie
 import { obtenirFavoris, ecouterFavoris } from '../lib/favoris';
 import { getClient, clearSession } from '../lib/api';
 import BandeauDefilant from './BandeauDefilant';
+import BandeauPage from './BandeauPage';
 
-export default function Layout({ children }) {
+export default function Layout({ children, bandeau }) {
   const navigate = useNavigate();
   const [nombreArticles, setNombreArticles] = useState(nombreArticlesPanier(obtenirPanier()));
   const [nombreFavoris, setNombreFavoris] = useState(obtenirFavoris().length);
@@ -57,7 +58,7 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      <main style={{ flex: 1 }}>{children}</main>
+      <main style={{ flex: 1 }}>{bandeau && <BandeauPage {...bandeau} />}{children}</main>
 
       <a
         href="https://wa.me/2250505380826?text=Bonjour%20Archange%20B%C3%A9b%C3%A9%2C%20j%27ai%20une%20question"

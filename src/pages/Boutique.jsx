@@ -83,9 +83,8 @@ export default function Boutique() {
   }
 
   return (
-    <Layout>
+    <Layout bandeau={{ photo: enPromo ? '/hero/page-promotions.jpg' : '/hero/page-boutique.jpg', titre: enPromo ? 'Nos promotions' : 'Notre boutique', sousTitre: enPromo ? 'Les bonnes affaires du moment, dans la limite des stocks.' : 'Puériculture, layette, jouets et accessoires, de la grossesse aux 15 ans.' }}>
       <div className="conteneur" style={{ padding: '32px 20px 60px' }}>
-        <h1 style={{ fontSize: 28, marginBottom: 20 }}>{enPromo ? 'Nos promotions' : 'Notre boutique'}</h1>
 
         {enPromo && (
           <div style={styles.bandeauPromo}>

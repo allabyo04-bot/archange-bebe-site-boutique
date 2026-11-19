@@ -2,9 +2,8 @@ import Layout from '../components/Layout';
 
 export default function MentionsLegales() {
   return (
-    <Layout>
+    <Layout bandeau={{ photo: '/hero/page-mentions.jpg', titre: 'Mentions légales & CGV' }}>
       <div className="conteneur" style={{ padding: '32px 20px 60px', maxWidth: 780 }}>
-        <h1 style={{ fontSize: 28, marginBottom: 24 }}>Mentions légales & Conditions générales de vente</h1>
 
         <h2 style={styles.titreSection}>Éditeur du site</h2>
         <p style={styles.paragraphe}>

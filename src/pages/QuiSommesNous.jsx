@@ -2,9 +2,8 @@ import Layout from '../components/Layout';
 
 export default function QuiSommesNous() {
   return (
-    <Layout>
+    <Layout bandeau={{ photo: '/hero/page-qui-sommes-nous.jpg', titre: 'Qui sommes-nous ?', sousTitre: 'Pour Le Bonheur Des Boudchou.' }}>
       <div className="conteneur" style={{ padding: '32px 20px 60px', maxWidth: 780 }}>
-        <h1 style={{ fontSize: 30, marginBottom: 24 }}>Qui sommes-nous ?</h1>
 
         <p style={styles.paragraphe}>
           Archange Bébé est une boutique dédiée à la puériculture et à la mode enfant, pensée pour
@@ -29,6 +28,14 @@ export default function QuiSommesNous() {
           <li>Un service client à l'écoute</li>
           <li>La proximité avec les familles</li>
         </ul>
+
+        <h2 style={{ fontSize: 20, marginTop: 36, marginBottom: 16 }}>La boutique en images</h2>
+        <div className="galerie-boutique">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <img key={n} src={`/galerie/boutique-${n}.jpg`} alt="Boutique Archange Bébé à Angré" loading="lazy" />
+          ))}
+        </div>
+        <p style={{ ...styles.paragraphe, marginTop: 16 }}>📍 Angré Carrefour Adama Sanogho, après le 22ème · 📞 05 05 38 08 26</p>
       </div>
     </Layout>
   );

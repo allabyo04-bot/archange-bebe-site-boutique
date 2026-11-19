@@ -24,9 +24,8 @@ export default function MesCommandes() {
   if (!client) return <Navigate to="/compte" replace />;
 
   return (
-    <Layout>
+    <Layout bandeau={{ photo: '/hero/page-panier.jpg', titre: 'Mes commandes' }}>
       <div className="conteneur" style={{ padding: '32px 20px 60px', maxWidth: 700 }}>
-        <h1 style={{ fontSize: 26, marginBottom: 24 }}>Mes commandes</h1>
 
         {chargement && <p style={{ color: 'var(--brown-soft)' }}>Chargement…</p>}
         {!chargement && commandes.length === 0 && <p style={{ color: 'var(--brown-soft)' }}>Aucune commande pour l'instant.</p>}

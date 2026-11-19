@@ -86,9 +86,8 @@ export default function Commande() {
   if (lignes.length === 0) return null;
 
   return (
-    <Layout>
+    <Layout bandeau={{ photo: '/hero/page-panier.jpg', titre: 'Finaliser la commande' }}>
       <div className="conteneur" style={{ padding: '32px 20px 60px', maxWidth: 640 }}>
-        <h1 style={{ fontSize: 28, marginBottom: 24 }}>Finaliser la commande</h1>
 
         {!client && (
           <p style={{ color: 'var(--brown-soft)', marginBottom: 20, fontSize: 14 }}>

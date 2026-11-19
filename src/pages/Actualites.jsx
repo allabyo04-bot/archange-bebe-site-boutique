@@ -6,11 +6,10 @@ export default function Actualites() {
   const urlIntegration = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(PAGE_FACEBOOK_URL)}&tabs=timeline&width=500&height=800&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`;
 
   return (
-    <Layout>
+    <Layout bandeau={{ photo: '/hero/page-actualites.jpg', titre: 'Actualités & vidéos', sousTitre: 'Les nouveautés et la vie de la boutique.' }}>
       <div className="conteneur" style={{ padding: '32px 20px 60px' }}>
         <div style={styles.enTete}>
           <div>
-            <h1 style={{ fontSize: 28, marginBottom: 8 }}>Actualités & vidéos</h1>
             <p style={{ color: 'var(--brown-soft)', maxWidth: 560 }}>
               Retrouve ici les nouveautés, les vidéos, les directs et les publications d'Archange Bébé —
               directement depuis notre page Facebook.
