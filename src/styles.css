@@ -193,3 +193,24 @@ img { max-width: 100%; display: block; }
   .pastilles-familles { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 14px 8px; }
   .pastille-nom { font-size: 11px; }
 }
+
+/* ===== Photos de la grande bannière ===== */
+.hero-photo {
+  position: absolute; inset: 0; background-size: cover; background-position: center right;
+  transition: opacity 1.2s ease; z-index: 0;
+}
+.hero-voile {
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(90deg, rgba(19,41,75,0.88) 0%, rgba(27,58,99,0.65) 40%, rgba(142,49,89,0.15) 75%, rgba(0,0,0,0) 100%);
+}
+.hero-avec-photo { min-height: 560px; display: flex; align-items: center; }
+.hero-avec-photo .hero-grille { grid-template-columns: minmax(0, 1fr); width: 100%; }
+.hero-avec-photo .hero-texte { max-width: 620px; }
+.hero-points { position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 8px; }
+.hero-points button { width: 10px; height: 10px; border-radius: 999px; border: none; padding: 0; background: rgba(255,255,255,0.5); cursor: pointer; transition: width .3s; }
+.hero-points button.actif { width: 28px; background: #fff; }
+@media (max-width: 720px) {
+  .hero-photo { background-position: 70% center; }
+  .hero-voile { background: linear-gradient(180deg, rgba(19,41,75,0.75) 0%, rgba(19,41,75,0.85) 100%); }
+  .hero-avec-photo { min-height: 0; }
+}

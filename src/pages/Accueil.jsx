@@ -16,6 +16,11 @@ const ICONES_FAMILLES = [
 ];
 const COULEURS_PASTILLES = ['#F7C6D9', '#BFD4F2', '#FBE3A6', '#C9EBDD', '#E3D3F5'];
 
+// Photos de la grande bannière (à déposer dans public/hero/). Si une photo manque, elle est simplement ignorée
+// et la bannière garde son dégradé de couleurs.
+const PHOTOS_BANNIERE = ['/hero/accueil-1.jpg', '/hero/accueil-2.jpg', '/hero/accueil-3.jpg'];
+const INTERVALLE_BANNIERE_MS = 6000;
+
 function iconeFamille(nom) {
   const n = nom.toUpperCase();
   const trouve = ICONES_FAMILLES.find(([cle]) => n.includes(cle));
@@ -33,6 +38,26 @@ export default function Accueil() {
   const [kits, setKits] = useState([]);
   const [totalArticles, setTotalArticles] = useState(null);
   const [recherche, setRecherche] = useState('');
+  const [photosBanniere, setPhotosBanniere] = useState([]);
+  const [indexPhoto, setIndexPhoto] = useState(0);
+
+  // On vérifie quelles photos existent vraiment avant de les afficher.
+  useEffect(() => {
+    let annule = false;
+    Promise.all(PHOTOS_BANNIERE.map((url) => new Promise((ok) => {
+      const img = new Image();
+      img.onload = () => ok(url);
+      img.onerror = () => ok(null);
+      img.src = url;
+    }))).then((res) => { if (!annule) setPhotosBanniere(res.filter(Boolean)); });
+    return () => { annule = true; };
+  }, []);
+
+  useEffect(() => {
+    if (photosBanniere.length < 2) return;
+    const t = setInterval(() => setIndexPhoto((i) => (i + 1) % photosBanniere.length), INTERVALLE_BANNIERE_MS);
+    return () => clearInterval(t);
+  }, [photosBanniere.length]);
 
   useEffect(() => {
     appelApi('GET', '/familles').then(setFamilles).catch(() => {});
@@ -60,7 +85,18 @@ export default function Accueil() {
   return (
     <Layout>
       {/* ===== Grande bannière d'accueil ===== */}
-      <section className={`hero-accueil hero-${theme.cle}`}>
+      <section className={`hero-accueil hero-${theme.cle}${photosBanniere.length ? ' hero-avec-photo' : ''}`}>
+        {photosBanniere.map((url, i) => (
+          <div key={url} className="hero-photo" style={{ backgroundImage: `url(${url})`, opacity: i === indexPhoto ? 1 : 0 }} aria-hidden="true" />
+        ))}
+        {photosBanniere.length > 0 && <div className="hero-voile" aria-hidden="true" />}
+        {photosBanniere.length > 1 && (
+          <div className="hero-points">
+            {photosBanniere.map((url, i) => (
+              <button key={url} type="button" onClick={() => setIndexPhoto(i)} className={i === indexPhoto ? 'actif' : ''} aria-label={`Photo ${i + 1}`} />
+            ))}
+          </div>
+        )}
         <div className="hero-decor" aria-hidden="true">
           {theme.decor.map((d, i) => (
             <span key={i} className="hero-decor-item" style={{ left: `${6 + i * 12}%`, animationDelay: `${i * 1.3}s`, fontSize: 14 + (i % 3) * 8 }}>{d}</span>
@@ -101,7 +137,7 @@ export default function Accueil() {
             </div>
           </div>
 
-          {photosCollage.length >= 3 && (
+          {photosBanniere.length === 0 && photosCollage.length >= 3 && (
             <div className="hero-collage" aria-hidden="true">
               {photosCollage.map((p, i) => (
                 <div key={p.id} className={`hero-collage-carte carte-${i}`}>
